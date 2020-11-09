@@ -1,0 +1,10 @@
+# Paquetes de node
+node_modules/
+
+# Archivos compilados y de pruebas
+/dist
+/tmp
+
+# System Files
+.DS_Store
+Thumbs.db
