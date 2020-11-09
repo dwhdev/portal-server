@@ -30,7 +30,7 @@ export const login = async (req: Request, res: Response) => {
 
         // setTokenOnCookies(res, token);
         res.status(200)
-            .cookie('SESSIONID', token, { httpOnly: true, maxAge: expireCookies })
+            .cookie('SESSIONID', token, { httpOnly: true, maxAge: expireCookies, sameSite: 'strict' })
             .json({ ok: true, expiresIn });
 
     } catch (ex) {
@@ -54,7 +54,7 @@ export const renewToken = (req: Request, res: Response) => {
     }
 
     res.status(200)
-        .cookie('SESSIONID', token, { httpOnly: true, maxAge: expireCookies })
+        .cookie('SESSIONID', token, { httpOnly: true, maxAge: expireCookies, sameSite: 'strict' })
         .json({ ok: true, expiresIn });
 };
 
