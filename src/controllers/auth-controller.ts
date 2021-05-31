@@ -1,9 +1,15 @@
-import { Request, Response } from 'express';
+import { CookieOptions, Request, Response } from 'express';
 
 import { authenticate } from '../helpers/ldap-auth';
 import { generateJWT } from '../helpers/jwt-helper';
 
 const expireCookies = 60 * 60 * 1000;
+
+const cookieOptions: CookieOptions = {
+    httpOnly: true,
+    maxAge: expireCookies,
+    sameSite: 'strict'
+};
 
 export const login = async (req: Request, res: Response) => {
 
@@ -30,7 +36,7 @@ export const login = async (req: Request, res: Response) => {
 
         // setTokenOnCookies(res, token);
         res.status(200)
-            .cookie('SESSIONID', token, { httpOnly: true, maxAge: expireCookies, sameSite: 'strict' })
+            .cookie('X-TOKEN', token, cookieOptions)
             .json({ ok: true, expiresIn });
 
     } catch (ex) {
@@ -40,7 +46,7 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const logout = (req: Request, res: Response) => {
-    res.clearCookie('SESSIONID').status(200).json({ ok: true });
+    res.clearCookie('X-TOKEN').status(200).json({ ok: true });
 };
 
 /**
@@ -57,8 +63,10 @@ export const renewToken = (req: Request, res: Response) => {
         return res.status(500).json({ ok: false, message });
     }
 
+
+
     res.status(200)
-        .cookie('SESSIONID', token, { httpOnly: true, maxAge: expireCookies, sameSite: 'strict' })
+        .cookie('X-TOKEN', token, cookieOptions)
         .json({ ok: true, expiresIn });
 };
 

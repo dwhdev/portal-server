@@ -4,7 +4,7 @@ import { verifyToken } from '../helpers/jwt-helper';
 
 export const checkAuthenticateJWT = (req: Request, res: Response, next: NextFunction) => {
 
-    const token: string = req.cookies.SESSIONID || null;
+    const token: string = req.cookies['X-TOKEN'] || null;
 
     if (!token) {
         return res.status(401).json({ ok: false, message: 'El token es requerido.' });
