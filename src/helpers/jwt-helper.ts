@@ -1,6 +1,6 @@
 import { sign, verify } from 'jsonwebtoken';
 
-const SECRET = process.env.JWT_SECRET || 'U2T48DExkXoHrknlR5LBlFTfIcpIiLC0HECo';
+const SECRET = process.env.JWT_SECRET;
 
 interface IToken {
     iat: number;
