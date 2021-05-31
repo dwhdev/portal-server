@@ -4,6 +4,7 @@ node_modules/
 # Archivos compilados y de pruebas
 /dist
 /tmp
+/cert
 
 # System Files
 .DS_Store
