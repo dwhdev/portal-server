@@ -1,15 +1,16 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
+        "moduleResolution": "node",
+        "rootDir": "./src",
         "outDir": "./dist",
+        "baseUrl": ".",
 
         /* Strict Type-Checking Options */
         "strict": true,
-        "typeRoots": ["./node_modules/@types", "./src/types"],
-        // "types": [],
+        "typeRoots": ["src/@types", "./node_modules/@types"],
         "esModuleInterop": true,
-
         /* Advanced Options */
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true

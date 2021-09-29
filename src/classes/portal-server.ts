@@ -9,10 +9,9 @@ import { urlencoded, json } from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
 import cookieParsers from 'cookie-parser';
-
+import { Context } from './context';
 
 export class PortalServer {
-
     private static serverInstance: PortalServer;
 
     private readonly port: number;
@@ -29,6 +28,7 @@ export class PortalServer {
         this.httpServer = new HTTPServer(this.app);
         this.ioServer = new SocketServer(this.httpServer);
         this.setupMiddlewares();
+        this.initContext();
         this.setupIO();
         this.setupRouters();
     }
@@ -51,12 +51,25 @@ export class PortalServer {
         this.app.use(morgan('tiny'));
     }
 
+    /**
+     * Inicializa el contexto global de la aplicación.
+     * Nota: el contexto se establece en el request.
+     */
+    private initContext(): void {
+        this.app.use((req, _, next) => {
+            req.context = new Context();
+            next();
+        });
+    }
+
+    /**
+     * Inicializa la comunicación por socket.
+     */
     private setupIO(): void {
         this.ioServer.on('connection', (client: Socket) => {
             console.log('[socket.io] client connected');
 
             client.on('disconnect', () => console.log('[socket.io] client disconnected'));
-
         });
     }
 
@@ -67,13 +80,11 @@ export class PortalServer {
         this.app.use('/api/auth', require('../routes/auth-route'));
     }
 
-
     /**
      * inicia el servidor del portal.
      * @param callback indica el puerto donde inicio el servidor.
      */
     public start(callback: (port: number) => void): void {
-
         this.httpServer.listen(this.port, () => {
             return callback(this.port);
         });

@@ -8,11 +8,10 @@ const expireCookies = 60 * 60 * 1000;
 const cookieOptions: CookieOptions = {
     httpOnly: true,
     maxAge: expireCookies,
-    sameSite: 'strict'
+    sameSite: 'strict',
 };
 
 export const login = async (req: Request, res: Response) => {
-
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -20,7 +19,6 @@ export const login = async (req: Request, res: Response) => {
     }
 
     try {
-
         const auth = await authenticate(username, password);
 
         if (!auth) {
@@ -35,10 +33,7 @@ export const login = async (req: Request, res: Response) => {
         }
 
         // setTokenOnCookies(res, token);
-        res.status(200)
-            .cookie('X-TOKEN', token, cookieOptions)
-            .json({ ok: true, expiresIn });
-
+        res.status(200).cookie('X-TOKEN', token, cookieOptions).json({ ok: true, expiresIn });
     } catch (ex) {
         console.warn(ex);
         res.status(500).json({ ok: false, message: 'Internal error.' });
@@ -55,19 +50,14 @@ export const logout = (req: Request, res: Response) => {
  * @param res Información de la respuesta.
  */
 export const renewToken = (req: Request, res: Response) => {
-
-    const username = req.authUser;
+    const { authUser: username } = req.context;
 
     const { token, expiresIn, message } = generateJWT(username);
     if (!token || !expiresIn) {
         return res.status(500).json({ ok: false, message });
     }
 
-
-
-    res.status(200)
-        .cookie('X-TOKEN', token, cookieOptions)
-        .json({ ok: true, expiresIn });
+    res.status(200).cookie('X-TOKEN', token, cookieOptions).json({ ok: true, expiresIn });
 };
 
 /**
@@ -76,5 +66,5 @@ export const renewToken = (req: Request, res: Response) => {
  * @param res Información de la respuesta.
  */
 export const verifyToken = (req: Request, res: Response) => {
-    return res.status(200).json({ ok: true, expiresIn: req.expiresIn });
+    return res.status(200).json({ ok: true, expiresIn: req.context.expiresIn });
 };

@@ -3,7 +3,6 @@ import { NextFunction, Request, Response } from 'express';
 import { verifyToken } from '../helpers/jwt-helper';
 
 export const checkAuthenticateJWT = (req: Request, res: Response, next: NextFunction) => {
-
     const token: string = req.cookies['X-TOKEN'] || null;
 
     if (!token) {
@@ -17,9 +16,7 @@ export const checkAuthenticateJWT = (req: Request, res: Response, next: NextFunc
 
     //TODO: Revisar información del usuario en la base de datos.
 
-
-    req.authUser = authUser;
-    req.expiresIn = expiresIn;
+    req.context.authUser = authUser;
+    req.context.expiresIn = expiresIn;
     next();
 };
-
